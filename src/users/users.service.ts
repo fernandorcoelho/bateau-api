@@ -6,6 +6,10 @@ import { CreateProfileDto } from 'src/profiles/dto/create-profile.dto';
 
 @Injectable()
 export class UsersService {
+  async findOne(email: string): Promise<User | undefined> {
+    return prisma.user.findUnique({ where: { email } });
+  }
+
   async createUser(
     email: string,
     password: string,
