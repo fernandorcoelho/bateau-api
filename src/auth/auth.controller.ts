@@ -23,6 +23,7 @@ export class AuthController {
     return this.authService.signIn({ email, password });
   }
 
+  // TODO: AJUSTAR E COMPREENDER MELHOR ESSA ROTA
   @Get('profile')
   getProfile(@Request() req) {
     const user = {
