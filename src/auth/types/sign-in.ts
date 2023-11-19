@@ -1,7 +1,12 @@
+import { RoleName } from '@prisma/client';
+
 export interface SignInResultParams {
-  sub: number;
-  profileId: number;
-  email: string;
+  access_token: string;
+  name: string;
+  nickname: string;
+  age: number;
+  cpf: string;
+  roles: RoleName[];
 }
 
 export interface SignInParams {
