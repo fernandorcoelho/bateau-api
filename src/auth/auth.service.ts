@@ -15,11 +15,12 @@ export class AuthService {
 
     const user = await this.usersService.findOne(email);
 
-    const isValidPassword = await this.usersService.validateUser(
+    const isExistingUser = await this.usersService.validateUser(
       email,
       password,
     );
-    if (!isValidPassword) {
+
+    if (!isExistingUser) {
       throw new UnauthorizedException();
     }
 

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { RoleName, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { prisma } from 'src/lib/prisma';
@@ -72,18 +76,33 @@ export class UsersService {
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    return prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        profile: {
-          create: profileData,
-        },
-        roles: {
-          create: [{ role: { connect: { name: 'Crowd' } } }],
-        },
-      },
+    // Verifique se já existe um usuário com o mesmo CPF
+    const existingUser = await prisma.profile.findUnique({
+      where: { cpf: profileData.cpf },
     });
+
+    if (existingUser) {
+      throw new BadRequestException('CPF já está em uso');
+    }
+
+    try {
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          profile: {
+            create: profileData,
+          },
+          roles: {
+            create: [{ role: { connect: { name: 'Crowd' } } }],
+          },
+        },
+      });
+
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateUserRole(userId: number, newRole: RoleName): Promise<User> {
