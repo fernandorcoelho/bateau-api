@@ -40,8 +40,9 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token inválido ou expirado');
     }
+
     return true;
   }
 

@@ -12,7 +12,6 @@ export class AuthService {
 
   async signIn(userData: SignInParams) {
     const { email, password } = userData;
-
     const user = await this.usersService.findOne(email);
 
     const isExistingUser = await this.usersService.validateUser(
@@ -21,7 +20,7 @@ export class AuthService {
     );
 
     if (!isExistingUser) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Usuário não encontrado');
     }
 
     const payload = {

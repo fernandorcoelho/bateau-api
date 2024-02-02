@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
   Post,
   Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in';
@@ -14,6 +16,14 @@ import { Public } from './decorators/public.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get('check-token')
+  checkToken(@Request() req) {
+    return {
+      message: 'Token válido',
+      user: req.user, // Retorna informações do usuário extraídas do token
+    };
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)
