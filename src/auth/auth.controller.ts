@@ -1,21 +1,32 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
   Post,
   Request,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in';
 import { Public } from './decorators/public.decorator';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Public()
+  @Post('register')
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    const user = await this.authService.createUser(
+      createUserDto.email,
+      createUserDto.password,
+      createUserDto.profile,
+    );
+
+    return user;
+  }
 
   @Get('check-token')
   checkToken(@Request() req) {

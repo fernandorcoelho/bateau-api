@@ -11,7 +11,7 @@ export class CreateProfileDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @Min(16, { message: 'You must be at least 16 years old.' })
+  @Min(18, { message: 'Você deve ter pelo menos 18 anos.' })
   age: number;
 
   @IsString()
